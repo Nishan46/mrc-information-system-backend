@@ -50,7 +50,7 @@ class Post(models.Model):
     
 
 class Gender(models.Model):
-    member = models.ForeignKey(Member,on_delete=models.CASCADE , unique=True)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
     male = models.BooleanField(default=False)
     female = models.BooleanField(default=False)
     other = models.BooleanField(default=False)
@@ -63,7 +63,7 @@ class Gender(models.Model):
 
 
 class Authentication_Info(models.Model):
-    member = models.ForeignKey(Member , on_delete=models.CASCADE ,unique=True)
+    member = models.ForeignKey(Member , on_delete=models.CASCADE)
     token = models.CharField(max_length=100)
     is_registered = models.BooleanField(default=False)
     is_verrified = models.BooleanField(default=False)
