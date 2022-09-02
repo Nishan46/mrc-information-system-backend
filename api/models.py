@@ -18,8 +18,39 @@ class Member(models.Model):
         return '{}'.format(self.user_name)
 
 
-class Gender(models.Model):
+class Post(models.Model):
     member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    just_member = models.BooleanField(default=False);
+    president_in_chief = models.BooleanField(default=False)
+    vice_president_in_chief = models.BooleanField(default=False)
+    Photography_president = models.BooleanField(default=False)
+    Photography_vice_president = models.BooleanField(default=False)
+    videography_president = models.BooleanField(default=False)
+    videography_vice_president = models.BooleanField(default=False)
+    technical_president = models.BooleanField(default=False)
+    technical_vice_president = models.BooleanField(default=False)
+    announcing_president = models.BooleanField(default=False)
+    announcing_vice_president = models.BooleanField(default=False)
+    reporting_president = models.BooleanField(default=False)
+    reporting_vice_president = models.BooleanField(default=False)
+    photo_and_video_editing_president = models.BooleanField(default=False)
+    photo_and_video_editing_vice_president = models.BooleanField(default=False)
+    graphic_designing_president = models.BooleanField(default=False)
+    graphic_designing_vice_president = models.BooleanField(default=False)
+    web_designing_president = models.BooleanField(default=False)
+    web_designing_vice_president = models.BooleanField(default=False)
+    promoted = models.DateTimeField()  
+
+    class Meta:
+            verbose_name_plural = "Post"
+
+    def __str__(self):
+        return '{}'.format(self.user_name)
+    
+    
+
+class Gender(models.Model):
+    member = models.ForeignKey(Member,on_delete=models.CASCADE , unique=True)
     male = models.BooleanField(default=False)
     female = models.BooleanField(default=False)
     other = models.BooleanField(default=False)
@@ -32,7 +63,7 @@ class Gender(models.Model):
 
 
 class Authentication_Info(models.Model):
-    member = models.ForeignKey(Member , on_delete=models.CASCADE)
+    member = models.ForeignKey(Member , on_delete=models.CASCADE ,unique=True)
     token = models.CharField(max_length=100)
     is_registered = models.BooleanField(default=False)
     is_verrified = models.BooleanField(default=False)
@@ -91,6 +122,7 @@ class Mobile(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     type_of_device = models.CharField(max_length=100 , blank=True)
     skil_exp = models.CharField(max_length=1000 , blank=True)
+
 
     def __str__(self):
         return '{}'.format(self.member)
