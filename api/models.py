@@ -11,12 +11,38 @@ class Member(models.Model):
     full_name = models.CharField(max_length=255)
     email = models.EmailField()
     phone =  models.CharField(max_length=12)
-    profile = models.ImageField(upload_to='media/profiles/', blank=True , default='profiles/default_user.png')
+    profile = models.ImageField(upload_to='profiles/', blank=True , default='profiles/default_user.png')
     address = models.CharField(max_length=500)
 
     def __str__(self):
         return '{}'.format(self.user_name)
 
+
+class Gender(models.Model):
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    male = models.BooleanField(default=False)
+    female = models.BooleanField(default=False)
+    other = models.BooleanField(default=False)
+
+    class Meta:
+            verbose_name_plural = "Gender"
+
+    def __str__(self):
+        return '{}'.format(self.user_name)
+
+
+class Authentication_Info(models.Model):
+    member = models.ForeignKey(Member , on_delete=models.CASCADE)
+    token = models.CharField(max_length=100)
+    is_registered = models.BooleanField(default=False)
+    is_verrified = models.BooleanField(default=False)
+
+    class Meta:
+            verbose_name_plural = "Authentication_Info"
+
+
+    def __str__(self):
+        return '{}'.format(self.user_name)
 
 class Parent(models.Model):
     member = models.ForeignKey(Member , on_delete=models.CASCADE)
@@ -186,7 +212,7 @@ class Fields(models.Model):
 class Accessory(models.Model):
     member = models.ForeignKey(Member,on_delete=models.CASCADE , blank=True)
     filed = models.ForeignKey(Fields,on_delete=models.CASCADE , blank=True)
-    accessory = models.ImageField(upload_to='media/accessories/', blank=True)
+    accessory = models.ImageField(upload_to='accessories/', blank=True)
 
     class Meta:
             verbose_name_plural = "Accessories"
