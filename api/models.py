@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
@@ -13,6 +14,8 @@ class Member(models.Model):
     phone =  models.CharField(max_length=12)
     profile = models.ImageField(upload_to='profiles/', blank=True , default='profiles/default_user.png')
     address = models.CharField(max_length=500)
+    birthday = models.DateField(default=datetime.now)
+    gender = models.CharField(max_length=10)
 
     def __str__(self):
         return '{}'.format(self.user_name)
@@ -43,20 +46,6 @@ class Post(models.Model):
 
     class Meta:
             verbose_name_plural = "Post"
-
-    def __str__(self):
-        return '{}'.format(self.user_name)
-    
-    
-
-class Gender(models.Model):
-    member = models.ForeignKey(Member,on_delete=models.CASCADE)
-    male = models.BooleanField(default=False)
-    female = models.BooleanField(default=False)
-    other = models.BooleanField(default=False)
-
-    class Meta:
-            verbose_name_plural = "Gender"
 
     def __str__(self):
         return '{}'.format(self.user_name)
@@ -242,8 +231,8 @@ class Fields(models.Model):
 
 
 class Accessory(models.Model):
-    member = models.ForeignKey(Member,on_delete=models.CASCADE , blank=True)
-    filed = models.ForeignKey(Fields,on_delete=models.CASCADE , blank=True)
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    filed = models.ForeignKey(Fields,on_delete=models.CASCADE)
     accessory = models.ImageField(upload_to='accessories/', blank=True)
 
     class Meta:
@@ -252,4 +241,15 @@ class Accessory(models.Model):
     def __str__(self):
         return '{}'.format(self.member)
 
+
+class Behaviour(models.Model):
+    member = models.ForeignKey(Member,on_delete=models.CASCADE)
+    behaviour_data = models.CharField(max_length=1000)
+    is_good = models.BooleanField(default=False)
+
+    class Meta:
+            verbose_name_plural = "Behaviour"
+
+    def __str__(self):
+        return '{}'.format(self.member)
 
