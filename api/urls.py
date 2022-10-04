@@ -3,5 +3,5 @@ from . views import *
 
 urlpatterns = [
     path('',Index,name='index'),
-    path('member-details-register',MEMBER_DETAILS_REGISTER,name='MEMBER_DETAILS_REGISTER')
+    path('member-register/<str:api_key>',MEMBER_DETAILS_REGISTER,name='MEMBER_DETAILS_REGISTER')
 ]
