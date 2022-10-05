@@ -1,7 +1,4 @@
-from asyncio.windows_events import NULL
-from dataclasses import dataclass
 import json
-from unicodedata import category
 
 from django.urls import is_valid_path
 from information_system.settings import API_KEY
@@ -15,13 +12,10 @@ from .Serializers import *
 def Index(request):
     return Response({'message':'wada wada bn'})
 
-
 @api_view(['POST','GET'])
 def MEMBER_DETAILS_REGISTER(request,api_key):
     if (request.method == 'POST'):
             if API_KEY == api_key:
-
-
                 member_serializer = MemberSerializer(data=json.loads(json.dumps(request.data))['body-data']['member-data'])
                 if member_serializer.is_valid():
                     member_serializer.save()
