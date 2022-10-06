@@ -1,14 +1,15 @@
 from datetime import datetime
+from email.policy import default
 from django.db import models
 
 # Create your models here.
 
 class Member(models.Model):
-    user_name = models.CharField(max_length=20 ,  primary_key=True)
+    user_name = models.CharField(max_length=100 ,  primary_key=True)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     admission_id = models.CharField(max_length=8)
-    grade = models.CharField(max_length=10)
+    grade = models.CharField(max_length=50)
     full_name = models.CharField(max_length=255)
     email = models.EmailField()
     phone =  models.CharField(max_length=12)
@@ -16,6 +17,9 @@ class Member(models.Model):
     address = models.CharField(max_length=500)
     birthday = models.DateField(default=datetime.now)
     gender = models.CharField(max_length=10)
+    parent_name = models.CharField(max_length=255,default="n")
+    parent_phone = models.CharField(max_length=12,default="n")
+    parent_adress = models.CharField(max_length=255,default="n")
 
     def __str__(self):
         return '{}'.format(self.user_name)
@@ -63,16 +67,6 @@ class Authentication_Info(models.Model):
 
     def __str__(self):
         return '{}'.format(self.user_name)
-
-class Parent(models.Model):
-    member = models.ForeignKey(Member , on_delete=models.CASCADE)
-    parent_name = models.CharField(max_length=255)
-    parent_phone = models.CharField(max_length=12)
-    parent_adress = models.CharField(max_length=500)
-
-
-    def __str__(self):
-        return '{}'.format(self.member.user_name)
 
 
 class DSLR_MirrorLess(models.Model):

@@ -28,7 +28,13 @@ def MEMBER_DETAILS_REGISTER(request,api_key):
                     else:
                         return Response('internal server error',status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 else:
-                    return Response('user already registered',status=status.HTTP_406_NOT_ACCEPTABLE)
+                    try:
+                        if member_serializer.errors.get("birthday")[0] == 'Date has wrong format. Use one of these formats instead: YYYY-MM-DD.':
+                            return Response(f'Birthday error',status=status.HTTP_406_NOT_ACCEPTABLE)
+                        else:
+                            return Response(f'Birthday error ekaknan na',status=status.HTTP_406_NOT_ACCEPTABLE)
+                    except:
+                        return Response(f'user already registered',status=status.HTTP_406_NOT_ACCEPTABLE)
             else:
                 return Response("API_KEY ERROR",status=status.HTTP_502_BAD_GATEWAY)
         
