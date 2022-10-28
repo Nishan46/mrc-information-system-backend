@@ -66,7 +66,7 @@ class Authentication_Info(models.Model):
 
 
     def __str__(self):
-        return '{}'.format(self.user_name)
+        return '{}'.format(self.member.user_name)
 
 
 class DSLR_MirrorLess(models.Model):
