@@ -194,6 +194,7 @@ class Graphic_Designer(models.Model):
     exp_photoshop = models.BooleanField(default=False)
     exp_illustrator = models.BooleanField(default=False)
     exp_coreldraw = models.BooleanField(default=False)
+    other_softwares = models.CharField(max_length=200  , blank=True)
     skil_exp = models.CharField(max_length=3000  , blank=True)
 
     def __str__(self):
