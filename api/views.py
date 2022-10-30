@@ -1,4 +1,5 @@
 
+from dataclasses import Field, fields
 import json
 from os import stat
 from information_system.settings import API_KEY
@@ -41,20 +42,34 @@ def MEMBER_DETAILS_REGISTER(request,api_key):
 def CATEGORIES_COMMING(request,api_key,token):
     if API_KEY == api_key:
         member = Member.objects.get(pk = Authentication_Info.objects.get(token=token).member)
-        main_json = json.loads(json.dumps(request.data))
-        main_json["member"] = Member.objects.get(pk=member)
-        category_serializer = CategorySerializer(data=main_json)
-        if category_serializer.is_valid():
-            category_serializer.save()
-            authentication = Authentication_Info.objects.get(member=member)
-            authentication.token = Get_token()
-            authentication.save(update_fields=['token'])
-            return Response({'message':'Success !', 'token':authentication.token},status=status.HTTP_202_ACCEPTED)
+        if Fields.objects.filter(member = member):
+            main_json = json.loads(json.dumps(request.data))
+            main_json["member"] = Member.objects.get(pk=member)
+            fields = Fields.objects.get(member=member)
+            category_serializer = CategorySerializer(instance=fields, data=main_json)
+            if category_serializer.is_valid():
+                category_serializer.save()
+                authentication = Authentication_Info.objects.get(member=member)
+                authentication.token = Get_token()
+                authentication.save(update_fields=['token'])
+                print('updated')
+                return Response({'message':'Success !', 'token':authentication.token},status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
+            main_json = json.loads(json.dumps(request.data))
+            main_json["member"] = Member.objects.get(pk=member)
+            category_serializer = CategorySerializer(data=main_json)
+            if category_serializer.is_valid():
+                category_serializer.save()
+                authentication = Authentication_Info.objects.get(member=member)
+                authentication.token = Get_token()
+                authentication.save(update_fields=['token'])
+                return Response({'message':'Success !', 'token':authentication.token},status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response("API_KEY ERROR",status=status.HTTP_502_BAD_GATEWAY)
-
 
 
 
