@@ -8,11 +8,12 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .Serializers import *
 from .models import *
-from .Core import Get_token
+from .Core import *
 
 # Create your views here. 
-@api_view(['POST'])
+@api_view(['Get'])
 def Index(request):
+    Get_CategoriesToAdd()
     return Response({'message':'wada wada bn'})
 
 @api_view(['POST','GET'])
@@ -53,7 +54,7 @@ def CATEGORIES_COMMING(request,api_key,token):
                 authentication.token = Get_token()
                 authentication.save(update_fields=['token'])
                 print('updated')
-                return Response({'message':'Success !', 'token':authentication.token},status=status.HTTP_202_ACCEPTED)
+                return Response({'message':'Success !', 'token':authentication.token , 'field':Get_CategoriesToAdd(member)},status=status.HTTP_202_ACCEPTED)
             else:
                 return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
         else:
@@ -65,12 +66,42 @@ def CATEGORIES_COMMING(request,api_key,token):
                 authentication = Authentication_Info.objects.get(member=member)
                 authentication.token = Get_token()
                 authentication.save(update_fields=['token'])
-                return Response({'message':'Success !', 'token':authentication.token},status=status.HTTP_202_ACCEPTED)
+                return Response({'message':'Success !', 'token':authentication.token , 'field':Get_CategoriesToAdd(member)},status=status.HTTP_202_ACCEPTED)
             else:
                 return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
     else:
         return Response("API_KEY ERROR",status=status.HTTP_502_BAD_GATEWAY)
 
+
+@api_view(['POST', 'GET'])
+def MOBILE_COMMING(request,api_key,token):
+    if API_KEY == api_key:
+        if Authentication_Info.objects.filter(token=token):
+            member = Member.objects.get(pk = Authentication_Info.objects.get(token=token).member)
+            main_json = json.loads(json.dumps(request.data))
+            main_json["member"] = Member.objects.get(pk=member)  
+            if Mobile.objects.filter(member = member).exists() == False:
+                mobile_serializer = MobileSerializer(data=main_json)
+                if mobile_serializer.is_valid():
+                    mobile_serializer.save()
+                    authentication = Authentication_Info.objects.get(member=member)
+                    authentication.token = Get_token()
+                    authentication.save(update_fields=['token'])
+                    return Response({'message':'Success !', 'token':authentication.token , 'field':Get_CategoriesToAdd(member)},status=status.HTTP_202_ACCEPTED)
+                else:
+                    return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                mobile = Mobile.objects.get(member=member)
+                mobile_serializer = MobileSerializer(instance=mobile , data=main_json)
+                if mobile_serializer.is_valid():
+                    mobile_serializer.save()
+                    authentication = Authentication_Info.objects.get(member=member)
+                    authentication.token = Get_token()
+                    authentication.save(update_fields=['token'])
+                    return Response({'message':'Success !', 'token':authentication.token , 'field':Get_CategoriesToAdd(member)},status=status.HTTP_202_ACCEPTED)
+                else:
+                    return Response(f'Invalid Data',status=status.HTTP_401_UNAUTHORIZED)
+                
 
 
 
